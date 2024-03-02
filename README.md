@@ -4,6 +4,15 @@
 2. [HOW TO INSTALL](#installation)
     - [MANUALLY INSTALLING DEPENDENCIES](#manually-installing-dependencies)
 3. [USING OTHER DATABASES](#using-a-different-database)
+4. [SCREENSHOTS](#screenshots)
+   - [Login](#login-page)
+   - [Register](#registration-page)
+   - [Home Page](#home-page)
+   - [Create Post](#create-post)
+   - [Search](#search)
+   - [Chat](#chat)
+   - [Settings](#settings)
+   - [Admin Dashboard](#django-admin-dashboard)
 
 ## Features 
 - Login
@@ -60,4 +69,40 @@ If this does not work then try installing the exact version of the packages list
 ## Using a Different Database
 
 To use a database other than SQLite3, please see [docs.djangoproject.com/en/5.0/ref/databases](https://docs.djangoproject.com/en/5.0/ref/databases/)
+
+## Screenshots
+
+### Login Page 
+
+![Login Page](./screenshots/login.png)
+
+### Registration Page
+
+![Registration Page](./screenshots/register.png)
+
+### Home Page
+
+![Home Page](./screenshots/home.png)
+
+### Create Post
+
+![Create Post](./screenshots/post.png)
+
+### Search 
+
+![Search](./screenshots/search.png)
+
+### Chat
+
+![Chat](./screenshots/chat.png)
+
+### Settings 
+
+![Profile Personalization](./screenshots/profile_personalize.png)
+
+![Account Options](./screenshots/account_options.png)
+
+## Django Admin Dashboard
+
+![Admin Dashboard](./screenshots/admin.png)
 
