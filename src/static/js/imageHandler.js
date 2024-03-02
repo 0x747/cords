@@ -87,26 +87,6 @@ submitPfpButton.addEventListener("click", async () => {
     }
 });
 
-// submitPfpButton.addEventListener("click", async () => {
-//     try {
-//         await cropper.result({type: 'blob'}).then((blob) => {
-//             //console.log("Before convert:", pfpFilePicker.files[0], blob);
-//             const imageFile = new File([blob], pfpFilePicker.files[0].name, {type: "image/png", format: 'png'});
-//             //console.log("After Convert:", pfpFilePicker.files[0], blob, imageFile)
-//             const dataTransfer = new DataTransfer();
-//             dataTransfer.items.add(imageFile);
-//             croppedPfpInput.files = dataTransfer.files;
-//         });
-//         pfpForm.submit();
-//         pfpForm.reset();
-//         cropper.destroy();
-//         pfpModal.close();
-
-//     } catch(err) {
-//         console.error(err);
-//     }
-// });
-
 /*************************************/
 /***** UPDATING BANNER ***************/
 /*************************************/
@@ -185,25 +165,6 @@ submitBannerButton.addEventListener("click", async () => {
     }
 });
 
-// submitBannerButton.addEventListener("click", async () => {
-//     try {
-//         await cropper.result({type: 'blob', size: 'original'}).then((blob) => {
-//             //console.log("Before convert:", pfpFilePicker.files[0], blob);
-//             const imageFile = new File([blob], bannerFilePicker.files[0].name, {type: "image/png", format: 'png'});
-//             //console.log("After Convert:", pfpFilePicker.files[0], blob, imageFile)
-//             const dataTransfer = new DataTransfer();
-//             dataTransfer.items.add(imageFile);
-//             croppedBannerInput.files = dataTransfer.files;
-//         });
-//         bannerForm.submit();
-//         bannerForm.reset();
-//         cropper.destroy();
-//         bannerModal.close();
-
-//     } catch(err) {
-//         console.error(err);
-//     }
-// });
 
 closeBannerModalButton.addEventListener("click", () => {
     bannerModal.close();
