@@ -1,0 +1,19 @@
+<div class="search-result-container" >
+    <p style="margin-bottom: 10px;">
+        {{users.count}} {% if users.count == 1%} user {% else %} users {% endif %} found
+    </p>
+    {% for user in users %}
+        <div class="user-result-card" hx-get="/{{user.username}}" hx-replace-url="true" hx-push-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML">
+            <div style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{user.avatar}}); background-size: cover; min-width: 100px; min-height: 100px; max-width: 100px; max-height: 100px; border-bottom-left-radius: 4px; border-top-left-radius: 4px;"></div>
+            <div class="user-result-information">
+                <p><b>{{user.name}}</b></p>
+                <p>@{{user.username}}</p>
+                {% if user.bio|length > 100 %}
+                    <p style="margin-top: 5px;">{{user.bio|slice:":140"}}...</p>
+                {% else %}
+                    <p style="margin-top: 5px;">{{user.bio}}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

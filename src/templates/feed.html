@@ -1,0 +1,32 @@
+{% for post in posts%}
+        <div class="post-card" id="{{post.id}}">
+            <div class="post-heading">
+                <div hx-get="/{{post.user.username}}" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button" style="display: flex; align-items: center; gap: 0.7rem;">
+                    <div class="post-user-avatar" style="background-image: url({{post.user.avatar.url}}); background-size: cover;"></div>
+                    <div class="post-username">{{ post.user.username }}</div>
+                </div>
+                {% if post.user.id  == request.user.id %}
+                    <button class="modal-cancel-button" hx-post="/delete-post/{{post.id}}/" hx-on:click="document.getElementById('{{post.id}}').remove();" hx-target="this" hx-swap="none" hx-post-redirect="/">Delete</button>
+                {% endif %}
+            </div>
+            <div class="post-media" style="background-image: url({{post.media.url}}); background-size: cover;"></div>
+            <div class="interaction-bar" id="p{{post.id}}" hx-get="/like/{{post.id}}" hx-trigger="load" hx-target="this" hx-swap="innerHTML" {% if post.caption %} style="border-bottom: 1px solid var(--light-button-hover);" {%endif%}>
+                
+            </div>
+            {% if post.caption %}
+                <div class="post-caption"><b>{{post.user.username}}</b> {{ post.caption }}</div>
+            {% endif %}
+            <div class="comment-section">
+                <input type="text" name="c{{post.id}}" class='comment-box' placeholder="Reply to this post...">
+                <button hx-post="/comment/{{post.id}}/" hx-trigger="click" hx-target="#userComments{{post.id}}" hx-swap="innerHTML" hx-include="[name='c{{post.id}}']" style="color: var(--green-button); font-size: 17px; background-color: transparent; border: none; cursor: pointer;">Send</button>
+            </div>
+            <div class="user-comments" id="userComments{{post.id}}" hx-get="/comment/{{post.id}}" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+                
+            </div>
+        </div> 
+{% endfor %}
+{% if not posts %} 
+<div class="end-indicator" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; margin-top: 10px;">
+    <p style="color: var(--light-text);">No posts to show</p>
+</div>
+{% endif %}

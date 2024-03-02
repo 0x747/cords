@@ -1,0 +1,18 @@
+{% if post_comments %}
+    <div class="view-comments-button" onclick="showComments('cbox{{post_id}}', this)">View {{ post_comments.count }} {% if post_comments.count == 1  %} comment {% else %} comments {% endif %} </div>
+{% endif %}
+<div id="cbox{{post_id}}" class="comments-box">
+{% for comment in post_comments %}
+    <div class="user-comment">
+            <div class="post-user-avatar" style="background-image: url({{comment.user.avatar.url}}); background-size: cover;"></div>
+            <div>
+                <div style="display: flex; flex-direction: row;"><b><span class="comment-user-button">{{ comment.user.username }}</span> <span style="font-weight: normal;">{{ comment.comment_text }}</span></b></div>
+                <div style="display: flex; flex-direction: row; gap: 1rem;">
+                    {% if comment.user == request.user %} 
+                        <div class="modal-cancel-button" hx-post="{{request.scheme}}://{{request.get_host}}/delete-comment/{{comment.id}}/" hx-trigger="click" hx-target="#userComments{{comment.post.id}}" hx-swap="innerHTML" style="font-size: 13px; padding-top: 3px;">Delete</div> 
+                    {% endif %}
+                </div>
+            </div>
+    </div>
+{% endfor %}
+</div>

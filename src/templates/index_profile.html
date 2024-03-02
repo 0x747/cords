@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"     type="text/css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"     type="text/css">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}"  type="text/css">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}"     type="text/css">
+    <link rel="stylesheet" href="{% static 'css/croppie.css' %}"  type="text/css"/>
+{% endblock %}
+
+{% block middle_navbar %}
+<div class="search-container" id="searchContainer">
+    <form id="searchForm" style="display: flex; align-items: center;" hx-get="/search" hx-target="#mainBox" hx-swap="innerHTML">
+        <!-- <select name="search-options" id="searchOptions" style="float: left; height: 42px; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 3px; border-top-left-radius: 3px; border: none; padding-left: 10px;">
+            <option value="0">Users</option>
+            <option value="1">Posts</option>
+            <option value="2">Interests</option>
+        </select> -->
+        <input type="text" placeholder="Search for a user" name="query" id="searchBox" class="main-search-box">
+    </form>
+    <!-- <div class="magnifying-glass" id="magnifyingGlass">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M787-138 535-390q-30 25-73.5 38.5T379-338q-102.231 0-173.115-70.837Q135-479.675 135-581.837 135-684 205.837-755q70.838-71 173-71Q481-826 552-755.115 623-684.231 623-582q0 42-13.5 83T572-429l253 253-38 38ZM379-392q81 0 135.5-54.5T569-582q0-81-54.5-135.5T379-772q-81 0-135.5 54.5T189-582q0 81 54.5 135.5T379-392Z"/></svg>
+    </div> -->
+</div>
+{% endblock %}
+
+{% block right_navbar %}
+    <button class="blue-button" id="addPostButton">Add Post</button>
+    <button class="inbox-button" id="inboxButton" onclick="toggleInbox()">
+        <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="M180.109-102.804q-30.746 0-54.025-23.28-23.28-23.279-23.28-54.025v-599.782q0-30.845 23.28-54.194 23.279-23.35 54.025-23.35h599.782q30.845 0 54.194 23.35 23.35 23.349 23.35 54.194v599.782q0 30.746-23.35 54.025-23.349 23.28-54.194 23.28H180.109Zm300.652-195.718q41.522 0 75.924-23.38 34.402-23.381 61.015-60.141h162.191v-397.848H180.109v397.848H342.87q26.804 36.76 61.587 60.141 34.782 23.38 76.304 23.38Z"/></svg>    
+    </button>
+    <dialog class="modal" id="postModal"> 
+        <h1 class="modal-heading">Add a post</h1>
+        <div class="image-preview" id="postPreview"></div>
+        <form id="addPostForm" enctype="multipart/form-data">
+            <input type="file" id="postFilePicker" accept=".jpg, .jpeg, .png, .gif" style="display: none;">
+            <label for="caption">CAPTION</label><br>
+            <textarea class="options-textbox" style="width: 96%; resize: none; height: 70px; padding-top: 10px; border-radius: 5px;" id="captionText"></textarea><br><br>
+        </form>
+        <div class="modal-bottom">
+            <button class="modal-cancel-button" type="button" id="closePostModalButton">Cancel</button>
+            <input type="button" id="submitPostButton" value="Post" class="green-button">
+        </div>
+    </dialog>
+{% endblock %}
+
+{% block left_box %}
+<div class="messages" id="messages">
+    {% for chat in active_chats %}
+        <div class="chat-card" hx-get="{{request.scheme}}://{{request.get_host}}/chat/{{chat.id}}" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox" hx-replace-url="true">
+            {% if request.user == chat.initiator %}
+                <div class="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{chat.recipient.avatar}}); background-size: cover;"></div>
+                <p>{{chat.recipient.username}}</p>
+            {% else %}
+                <div class="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{chat.initiator.avatar}}); background-size: cover;"></div>
+                <p>{{chat.initiator.username}}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+<div class="user-corner" id="userCorner">
+    <div class="user-profile-button" id="userProfileButton" hx-get="/{{user.username}}" hx-replace-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox">
+        <div class="avatar" id="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{user.avatar}}); background-size: cover;"></div>
+        <div class="username" id="username">{{user.username}}</div>
+    </div>
+    <button class="settings" type="button" id="settingsButton">
+        <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="m377-64-21-130q-16-6-35.5-17T287-233l-122 55L61-364l109-81q-1-7-1.5-18t-.5-19q0-7 .5-17.5T170-518L61-598l104-185 120 55q14-11 34-22.5t37-17.5l21-129h207l20 129q17 6 37.5 17.5T675-728l121-55 104 185-111 79q1 9 2 20t1 19q0 8-1 18.5t-1 18.5l109 79-104 186-122-55q-14 11-33 22.5T605-194L584-64H377Zm102-273q60 0 102-42t42-102q0-60-42-102t-102-42q-60 0-102 42t-42 102q0 60 42 102t102 42Z"/></svg>
+    </button>
+</div>
+{% endblock %}
+
+{% block main_box %} 
+<div class="profile-container">
+    {% if profile_user.banner.url != "/media/default/banner.png" %}
+    <div class="profile-banner" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{profile_user.banner}}); background-size: cover;"></div>
+    {% endif %}
+    <div class="user-information">
+        <div style="display: flex; flex-direction: row; gap: 1.5rem; width: 100%;">
+            <div class="profile-pfp" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{profile_user.avatar}}); background-size: cover;"></div>
+            <div class="user-details" id="d{{profile_user.id}}">
+                <div style="display: flex; justify-content: space-between;">
+                    <p class="display-name">{{ profile_user.name }} 
+                        <span style="font-size: 17px; color: var(--light-text); font-weight: lighter; fill: var(--light-text); display: flex; align-items:end;"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-400q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z"/></svg>
+                            &nbsp;Joined {{ profile_user.date_joined|date:"F j, Y" }}</span></p>
+                    {% if profile_user.id != user.id %}
+                        <div class="interaction-options">
+                            {% if follows %}
+                                <button hx-get="{{request.scheme}}://{{request.get_host}}/create-chat/{{profile_user.id}}" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox" hx-replace-url="true" class="message-user-button"><svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="M184.615-200Q157-200 138.5-218.5 120-237 120-264.615v-430.77Q120-723 138.5-741.5 157-760 184.615-760h590.77Q803-760 821.5-741.5 840-723 840-695.385v430.77Q840-237 821.5-218.5 803-200 775.385-200h-590.77ZM480-475.384 160-684.615v420q0 10.769 6.923 17.692T184.615-240h590.77q10.769 0 17.692-6.923T800-264.615v-420L480-475.384ZM480-520l307.692-200H172.308L480-520ZM160-684.615V-720v455.385q0 10.769 6.923 17.692T184.615-240H160v-444.615Z"/></svg></button>
+                                <button class="red-outline-button" hx-post="/follow/{{profile_user.id}}/" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML">Unfollow</button>
+                            {% else %}
+                                <button class="green-button" hx-post="/follow/{{profile_user.id}}/" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML">Follow</button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                <p class="profile-username">@{{ profile_user.username }}</p>
+                <div class="user-statistics">
+                    <p class="posts"><b>{{profile_posts.count}}</b> Posts&nbsp;&nbsp;&nbsp;</p>
+                    <p {% if followers.count %} class="follow"  onclick="showFollowModal('followerModal')" {% endif %}><b>{{ followers.count }}</b> Followers</p>&nbsp;&nbsp;&nbsp;
+
+                    <dialog class="modal" id="followerModal" style="width: 360px;">
+                        <div class="modal-top">
+                            <h1 class="modal-heading">Followers</h1>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            {% for entry in followers %}
+                                <div hx-get="/{{entry.follower.username}}" onclick="closeFollowModal('followerModal')" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
+                                    <div class="post-user-avatar" style="background-image: url({{entry.follower.avatar.url}}); background-size: cover;"></div>
+                                    <div class="post-username" style="font-size: 17px;">{{ entry.follower.username }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-bottom">
+                            <button class="modal-cancel-button" type="button" onclick="closeFollowModal('followerModal')">Close</button>
+                        </div>
+                    </dialog>
+
+                    <p {% if following.count %} class="follow" onclick="showFollowModal('followingModal')" {% endif %}><b>{{ following.count }}</b> Following</p>
+
+                    <dialog class="modal" id="followingModal" style="width: 360px;">
+                        <div class="modal-top">
+                            <h1 class="modal-heading">Following</h1>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            {% for entry in following %}
+                                <div hx-get="/{{entry.followee.username}}" onclick="closeFollowModal('followingModal')" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
+                                    <div class="post-user-avatar" style="background-image: url({{entry.followee.avatar.url}}); background-size: cover;"></div>
+                                    <div class="post-username" style="font-size: 17px;">{{ entry.followee.username }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-bottom">
+                            <button class="modal-cancel-button" type="button" onclick="closeFollowModal('followingModal')">Close</button>
+                        </div>
+                    </dialog>
+
+                </div>
+                <p class="profile-bio">{{ profile_user.bio }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="profile-posts" >
+        {% for post in profile_posts reversed %} 
+            <div class="profile-post-preview" hx-get="{{request.scheme}}://{{request.get_host}}/{{post.user.username}}/posts" hx-target="#mainBox" hx-trigger="click" hx-swap="innerHTML" hx-replace-url="true" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{post.media}});">
+                <div class="post-preview-overlay"><svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48"><path d="m479-91-56-50q-107-99-177.5-170.5T133-441q-42-58-58.5-105.5T58-642q0-99 66.5-166.5T289-876q56 0 104.5 24.5T479-780q42-49 88.5-72.5T669-876q99 0 166 67.5T902-642q0 48-17 95t-58.5 105q-41.5 58-112 130T536-141l-57 50Z"/></svg>{{post.like_count}}</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block right_box %}
+<!-- <div class="inbox-options" id="inboxOptions">
+    <button class="show-likes-button" id="showLikesButton">Likes</button>
+    <button class="show-comments-button" id="showCommentsButton">Comments</button>
+    <button class="show-requests-button" id="showRequestsButton">Requests</button>
+</div> -->
+<div class="inbox" id="inbox"  hx-get="/notifications" hx-target="this" hx-trigger="load" hx-swap="innerHTML"></div>
+{% endblock %}

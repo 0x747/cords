@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"     type="text/css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"     type="text/css">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}"  type="text/css">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}"     type="text/css">
+    <link rel="stylesheet" href="{% static 'css/croppie.css' %}"  type="text/css"/>
+{% endblock %}
+
+{% block middle_navbar %}
+<div class="search-container" id="searchContainer">
+    <form id="searchForm" style="display: flex; align-items: center;" hx-get="/search" hx-target="#mainBox" hx-swap="innerHTML">
+        <!-- <select name="search-options" id="searchOptions" style="float: left; height: 42px; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 3px; border-top-left-radius: 3px; border: none; padding-left: 10px;">
+            <option value="0">Users</option>
+            <option value="1">Posts</option>
+            <option value="2">Interests</option>
+        </select> -->
+        <input type="text" placeholder="Search for a user" name="query" id="searchBox" class="main-search-box">
+    </form>
+    <!-- <div class="magnifying-glass" id="magnifyingGlass">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M787-138 535-390q-30 25-73.5 38.5T379-338q-102.231 0-173.115-70.837Q135-479.675 135-581.837 135-684 205.837-755q70.838-71 173-71Q481-826 552-755.115 623-684.231 623-582q0 42-13.5 83T572-429l253 253-38 38ZM379-392q81 0 135.5-54.5T569-582q0-81-54.5-135.5T379-772q-81 0-135.5 54.5T189-582q0 81 54.5 135.5T379-392Z"/></svg>
+    </div> -->
+</div>
+{% endblock %}
+
+{% block right_navbar %}
+    <button class="blue-button" id="addPostButton">Add Post</button>
+    <button class="inbox-button" id="inboxButton" onclick="toggleInbox()">
+        <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="M180.109-102.804q-30.746 0-54.025-23.28-23.28-23.279-23.28-54.025v-599.782q0-30.845 23.28-54.194 23.279-23.35 54.025-23.35h599.782q30.845 0 54.194 23.35 23.35 23.349 23.35 54.194v599.782q0 30.746-23.35 54.025-23.349 23.28-54.194 23.28H180.109Zm300.652-195.718q41.522 0 75.924-23.38 34.402-23.381 61.015-60.141h162.191v-397.848H180.109v397.848H342.87q26.804 36.76 61.587 60.141 34.782 23.38 76.304 23.38Z"/></svg>    
+    </button>
+    <dialog class="modal" id="postModal"> 
+        <h1 class="modal-heading">Add a post</h1>
+        <div class="image-preview" id="postPreview"></div>
+        <form id="addPostForm" enctype="multipart/form-data">
+            <input type="file" id="postFilePicker" accept=".jpg, .jpeg, .png, .gif" style="display: none;">
+            <label for="caption">CAPTION</label><br>
+            <textarea class="options-textbox" style="width: 96%; resize: none; height: 70px; padding-top: 10px; border-radius: 5px;" id="captionText"></textarea><br><br>
+        </form>
+        <div class="modal-bottom">
+            <button class="modal-cancel-button" type="button" id="closePostModalButton">Cancel</button>
+            <input type="button" id="submitPostButton" value="Post" class="green-button">
+        </div>
+    </dialog>
+{% endblock %}
+
+{% block left_box %}
+<div class="messages" id="messages">
+    {% for chat in active_chats %}
+        <div class="chat-card" hx-get="{{request.scheme}}://{{request.get_host}}/chat/{{chat.id}}" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox" hx-replace-url="true">
+            {% if request.user == chat.initiator %}
+                <div class="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{chat.recipient.avatar}}); background-size: cover;"></div>
+                <p>{{chat.recipient.username}}</p>
+            {% else %}
+                <div class="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{chat.initiator.avatar}}); background-size: cover;"></div>
+                <p>{{chat.initiator.username}}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+<div class="user-corner" id="userCorner">
+    <div class="user-profile-button" id="userProfileButton" hx-get="/{{user.username}}" hx-replace-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox">
+        <div class="avatar" id="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{user.avatar}}); background-size: cover;"></div>
+        <div class="username" id="username">{{user.username}}</div>
+    </div>
+    <button class="settings" type="button" id="settingsButton">
+        <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="m377-64-21-130q-16-6-35.5-17T287-233l-122 55L61-364l109-81q-1-7-1.5-18t-.5-19q0-7 .5-17.5T170-518L61-598l104-185 120 55q14-11 34-22.5t37-17.5l21-129h207l20 129q17 6 37.5 17.5T675-728l121-55 104 185-111 79q1 9 2 20t1 19q0 8-1 18.5t-1 18.5l109 79-104 186-122-55q-14 11-33 22.5T605-194L584-64H377Zm102-273q60 0 102-42t42-102q0-60-42-102t-102-42q-60 0-102 42t-42 102q0 60 42 102t102 42Z"/></svg>
+    </button>
+</div>
+{% endblock %}
+
+{% block main_box %} 
+{% for post in posts %}
+        <div class="post-card" id="{{post.id}}">
+            <div class="post-heading">
+                <div hx-get="/{{post.user.username}}" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button" style="display: flex; align-items: center; gap: 0.7rem;">
+                    <div class="post-user-avatar" style="background-image: url({{post.user.avatar.url}}); background-size: cover;"></div>
+                    <div class="post-username">{{ post.user.username }}</div>
+                </div>
+                {% if post.user.id  == user.id %}
+                <button class="modal-cancel-button" hx-post="{{request.scheme}}://{{request.get_host}}/delete-post/{{post.id}}/" hx-on:click="document.getElementById('{{post.id}}').remove();" hx-target="this" hx-swap="none" hx-post-redirect="/">Delete</button>
+                {% endif %}
+            </div>
+            <div class="post-media" style="background-image: url({{post.media.url}}); background-size: cover;"></div>
+            <div class="interaction-bar" id="p{{post.id}}" hx-get="/like/{{post.id}}" hx-trigger="load" hx-target="this" hx-swap="innerHTML" {% if post.caption %} style="border-bottom: 1px solid var(--light-button-hover);" {%endif%}>
+                
+            </div>
+            {% if post.caption %}
+                <div class="post-caption"><b>{{post.user.username}}</b> {{ post.caption }}</div>
+            {% endif %}
+            <div class="comment-section">
+                <input type="text" name="c{{post.id}}" class='comment-box' placeholder="Reply to this post...">
+                <button hx-post="/comment/{{post.id}}/" hx-trigger="click" hx-target="#userComments{{post.id}}" hx-swap="innerHTML" hx-include="[name='c{{post.id}}']" style="color: var(--green-button); font-size: 17px; background-color: transparent; border: none; cursor: pointer;">Send</button>
+            </div>
+            <div class="user-comments" id="userComments{{post.id}}" hx-get="/comment/{{post.id}}" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+                
+            </div>
+        </div> 
+{% endfor %}
+{% if not posts %} 
+<div class="end-indicator" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; margin-top: 10px;">
+    <p style="color: var(--light-text);">No posts to show</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block right_box %}
+<!-- <div class="inbox-options" id="inboxOptions">
+    <button class="show-likes-button" id="showLikesButton">Likes</button>
+    <button class="show-comments-button" id="showCommentsButton">Comments</button>
+    <button class="show-requests-button" id="showRequestsButton">Requests</button>
+</div> -->
+<div class="inbox" id="inbox"  hx-get="/notifications" hx-target="this" hx-trigger="load" hx-swap="innerHTML"></div>
+{% endblock %}

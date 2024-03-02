@@ -1,0 +1,39 @@
+{% extends 'form.html' %}
+{% load static %}
+
+{% block page_title %}Log in{% endblock %}
+
+{% block form_method %}post{% endblock %}
+
+{% block form_title %}
+    <h1>Log in</h1>
+{% endblock %}
+
+{% block form_onsubmit %}onsbumit="return validateLogin();"{% endblock %}
+
+{% block form_content %}
+{% csrf_token %}
+    <label for="email">EMAIL <span>*</span></label><br>
+    <input type="email" name="email" id="email" autocomplete="off" class="form-textbox"><br>
+    {% if messages %}
+        {% for message in messages %}
+            {% if messages %}
+                <p class="error" id="error">{{ message }}</p>
+            {% endif %} 
+        {% endfor %}
+    {% endif %}<br>
+    <label for="password">PASSWORD <span>*</span></label><br>
+    <input type="password" name="password" id="password" autocomplete="off" class="form-textbox" style="margin-bottom: 0px;">
+    {% if messages %}
+        {% for message in messages %}
+            {% if messages %}
+                <p class="error" id="error">{{ message }}</p>
+            {% endif %} 
+        {% endfor %}
+    {% endif %}
+    <!-- <button type="button" hx-post="/forgot-password" class="forgot-password-button" id="forgotPasswordButton">Forgot your password?</button><br><br> -->
+    <input type="submit" value="Log in" name="register" class="submit-button"  onsubmit="return validateForm();" style="margin-top: 30px;">
+    <p class="additional-info" style="margin-bottom: 0;">
+        Don't have an account?<a href="/register"> Register</a>.
+    </p>
+{% endblock %}

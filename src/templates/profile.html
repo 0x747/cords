@@ -1,0 +1,77 @@
+<div class="profile-container">
+    {% if profile_user.banner.url != "/media/default/banner.png" %}
+    <div class="profile-banner" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{profile_user.banner}}); background-size: cover;"></div>
+    {% endif %}
+    <div class="user-information">
+        <div style="display: flex; flex-direction: row; gap: 1.5rem; width: 100%;">
+            <div class="profile-pfp" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{profile_user.avatar}}); background-size: cover;"></div>
+            <div class="user-details" id="d{{profile_user.id}}">
+                <div style="display: flex; justify-content: space-between;">
+                    <p class="display-name">{{ profile_user.name }} 
+                        <span style="font-size: 17px; color: var(--light-text); font-weight: lighter; fill: var(--light-text); display: flex; align-items:end;"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-400q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z"/></svg>
+                            &nbsp;Joined {{ profile_user.date_joined|date:"F j, Y" }}</span></p>
+                    {% if profile_user.id != user.id %}
+                        <div class="interaction-options">
+                            {% if follows %}
+                            <button hx-get="{{request.scheme}}://{{request.get_host}}/create-chat/{{profile_user.id}}" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox" hx-replace-url="true" class="message-user-button"><svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="M184.615-200Q157-200 138.5-218.5 120-237 120-264.615v-430.77Q120-723 138.5-741.5 157-760 184.615-760h590.77Q803-760 821.5-741.5 840-723 840-695.385v430.77Q840-237 821.5-218.5 803-200 775.385-200h-590.77ZM480-475.384 160-684.615v420q0 10.769 6.923 17.692T184.615-240h590.77q10.769 0 17.692-6.923T800-264.615v-420L480-475.384ZM480-520l307.692-200H172.308L480-520ZM160-684.615V-720v455.385q0 10.769 6.923 17.692T184.615-240H160v-444.615Z"/></svg></button>
+                            <button class="red-outline-button" hx-post="/follow/{{profile_user.id}}/" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML">Unfollow</button>
+                            {% else %}
+                                <button class="green-button" hx-post="/follow/{{profile_user.id}}/" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML">Follow</button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                <p class="profile-username">@{{ profile_user.username }}</p>
+                <div class="user-statistics">
+                    <p class="posts"><b>{{profile_posts.count}}</b> Posts&nbsp;&nbsp;&nbsp;</p>
+                    <p {% if followers.count %} class="follow"  onclick="showFollowModal('followerModal')" {% endif %}><b>{{ followers.count }}</b> Followers</p>&nbsp;&nbsp;&nbsp;
+
+                    <dialog class="modal" id="followerModal" style="width: 360px;">
+                        <div class="modal-top">
+                            <h1 class="modal-heading">Followers</h1>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            {% for entry in followers %}
+                                <div hx-get="/{{entry.follower.username}}" onclick="closeFollowModal('followerModal')" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
+                                    <div class="post-user-avatar" style="background-image: url({{entry.follower.avatar.url}}); background-size: cover;"></div>
+                                    <div class="post-username" style="font-size: 17px;">{{ entry.follower.username }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-bottom">
+                            <button class="modal-cancel-button" type="button" onclick="closeFollowModal('followerModal')">Close</button>
+                        </div>
+                    </dialog>
+
+                    <p {% if following.count %} class="follow" onclick="showFollowModal('followingModal')" {% endif %}><b>{{ following.count }}</b> Following</p>
+
+                    <dialog class="modal" id="followingModal" style="width: 360px;">
+                        <div class="modal-top">
+                            <h1 class="modal-heading">Following</h1>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            {% for entry in following %}
+                                <div hx-get="/{{entry.followee.username}}" onclick="closeFollowModal('followingModal')" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
+                                    <div class="post-user-avatar" style="background-image: url({{entry.followee.avatar.url}}); background-size: cover;"></div>
+                                    <div class="post-username" style="font-size: 17px;">{{ entry.followee.username }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-bottom">
+                            <button class="modal-cancel-button" type="button" onclick="closeFollowModal('followingModal')">Close</button>
+                        </div>
+                    </dialog>
+
+                </div>
+                <p class="profile-bio">{{ profile_user.bio }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="profile-posts" >
+        {% for post in profile_posts reversed %} 
+            <div class="profile-post-preview" hx-get="{{request.scheme}}://{{request.get_host}}/{{post.user.username}}/posts" hx-target="#mainBox" hx-trigger="click" hx-swap="innerHTML" hx-replace-url="true" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{post.media}});">
+                <div class="post-preview-overlay"><svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48"><path d="m479-91-56-50q-107-99-177.5-170.5T133-441q-42-58-58.5-105.5T58-642q0-99 66.5-166.5T289-876q56 0 104.5 24.5T479-780q42-49 88.5-72.5T669-876q99 0 166 67.5T902-642q0 48-17 95t-58.5 105q-41.5 58-112 130T536-141l-57 50Z"/></svg>{{post.like_count}}</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

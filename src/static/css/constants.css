@@ -1,0 +1,20 @@
+:root {
+    --light-background-grey: #f2f3f5;
+    --light-icon-grey: #555555;
+    --light-icon-hover-black: #202020;
+    --light-navbar-border-grey: #dcdcdc;
+    --light-navbar-border-shadow: #f5f5f5;
+    --light-textbox-grey: #E3E5E8;
+    --light-inbox-btn-hover-grey: #E0E1E5;
+    --light-button-hover: #d8d9dd;
+    --text-link: #0091ff;
+    --light-text: #5C5E66;
+    --light-text-hover: #313338;
+    --light-button-selected: #d8d9db;
+    --green-button: #23A55A;
+    --green-button-hover: #1f914e;
+    --blue-button: #5763e8;
+    --blue-button-hover: #4752C4;
+    --red-button: #DA373C;
+    --red-button-hover: #A12828;
+}

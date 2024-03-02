@@ -1,0 +1,11 @@
+<div id="messages" hx-swap-oob="afterbegin"> 
+    <div class="chat-card" >
+        {% if request.user == chat.initiator %}
+            <div class="avatar"></div>
+            <p>{{chat.recipient.username}}</p>
+        {% else %}
+            <div class="avatar" ></div>
+            <p>{{chat.initiator.username}}</p>
+        {% endif %}
+    </div>
+</div>  

@@ -1,0 +1,27 @@
+{% for notification in notifications %}
+    {% if notification.notification_type == 0 %}
+        <div class="notification-card">
+            <p style="width: 230px;"><b class="notification-username" hx-get="/{{notification.initiator.username}}" hx-replace-url="true" hx-push-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" >{{notification.initiator.username}}</b> liked your post</p>
+            <div style="min-height: 35px; min-width: 35px; max-height: 35px; max-width: 35px;background-image: url({{notification.post.media.url}}); background-size: cover;"></div>
+        </div>
+    {% elif notification.notification_type == 1 %}
+    <div class="notification-card">
+        <p style="width: 230px;"><b class="notification-username" hx-get="/{{notification.initiator.username}}" hx-replace-url="true" hx-push-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML">{{notification.initiator.username}}</b> commented on your post: {{notification.comment.comment_text}}</p>
+        <div style="min-height: 35px; min-width: 35px; max-height: 35px; max-width: 35px;background-image: url({{notification.post.media.url}}); background-size: cover;"></div>
+    </div>
+    {% elif notification.notification_type == 2 %}
+    <div class="notification-card">
+        <p><b class="notification-username" hx-get="/{{notification.initiator.username}}" hx-replace-url="true" hx-push-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML">{{notification.initiator.username}}</b> started following you</p>
+    </div>
+    {% elif notification.notification_type == 3 %}
+    <div class="notification-card">
+        <p><b class="notification-username" hx-get="/{{notification.initiator.username}}" hx-replace-url="true" hx-push-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML">{{notification.initiator.username}}</b> sent you a message: {{notification.message.content}}</p>
+    </div>
+    {% endif %}
+    <div style="display: flex; justify-content: center;">
+        <p style="border-bottom: 1px solid var(--light-button-hover); width: 270px; text-align: center;"></p>
+    </div>
+{% endfor %}
+{% if not notifications %}
+<p style="text-align: center; margin-top: 15px; width: 300px;">No notifications</p>
+{% endif %}

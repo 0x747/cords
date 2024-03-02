@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}" type="text/css">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <title>{% block page_title %}{% endblock %}</title>
+</head>
+<body>
+    <div class="form-container">
+        <form action="" method="{% block form_method %} {%endblock%}" {% block form_onsubmit %} {% endblock %}>
+            <div class="form-title" id="formTitle">
+                {% block form_title %}{% endblock %}
+            </div>
+            <div class="form-content" id="formContent">
+                {% block form_content %}{% endblock %}
+            </div>
+        </form>
+    </div>
+    <script src="{% static 'js/htmx.min.js'%}" type="text/javascript"></script>
+    <script src="{% static 'js/validator.js' %}" type="text/javascript"></script>
+</body>
+</html>

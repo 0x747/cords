@@ -1,0 +1,227 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    {% block css %}{% endblock %}
+    <title>Cords</title>
+</head>
+<body id="body">
+    <div class="container-wrapper" id="containerWrapper">
+        <div class="container" id="container">
+            <div class="navbar" id="navbar">
+                <div class="left" id="left">
+                    <a href="/">
+                        <button class="settings"><svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="M160-120v-480l320-240 320 240v480H560v-280H400v280H160Z"/></svg></button>
+                    </a>
+                    {% block left_navbar %}{% endblock %}
+                </div>
+                <div class="middle" id="middle">
+                    {% block middle_navbar %}{% endblock %}
+                </div>
+                <div class="right" id="right">
+                    {% block right_navbar %}{% endblock %}
+                </div>
+            </div>
+            <div class="content" id="content">
+                <div class="left-box" id="leftBox">
+                    {% block left_box %}{% endblock %}
+                </div>
+                <div class="main-box" id="mainBox">
+                    {% block main_box %} {% endblock %}
+                </div>
+                <div class="right-box" id="rightBox">
+                    {% block right_box %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        <div class="setting-container" id="settingContainer">
+            <div class="left-settings" id="leftSetting">
+                <ul class="button-list">
+                    <li><p class="setting-category">USER SETTINGS</p></li>
+                    <li><button class="list-button selected" onclick="showTab(event, 'profile')" type="button">Edit Profile</button></li>
+                    <li><button class="list-button" onclick="showTab(event, 'account')" type="button">My Account</button></li>
+                    <li><div class="separator"></div></li>
+                    <!-- <li><p class="setting-category">APP SETTINGS</p></li> -->
+                    <!-- <li><button class="list-button" onclick="showTab(event, 'themes')" type="button">Themes</button></li>
+                    <li><button class="list-button" onclick="showTab(event, 'fonts')" type="button">Fonts</button></li> -->
+                    <!-- <li><div class="separator"></div></li> -->
+                    <li><button class="list-button" hx-post="/logout/" hx-swap="none" style="bottom: 0;">Logout 
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M186.666-120q-27 0-46.833-19.833T120-186.666v-586.668q0-27 19.833-46.833T186.666-840h292.667v66.666H186.666v586.668h292.667V-120H186.666Zm470.668-176.667-47-48 102-102H360v-66.666h351.001l-102-102 46.999-48 184 184-182.666 182.666Z"/></svg>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="middle-settings">
+                <div class="tab-content active" id="profile">
+                    <h1 class="setting-heading">Edit Profile</h1>
+                    <div class="banner" id="banner" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{user.banner}}); background-size: cover;">
+                        <button class="add-banner" id="changeBannerButton" title="Change Banner">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" width="35"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                        </button>
+                        <!-- <button class="add-banner" title="Change Banner Color">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-120q-45 0-89-22t-71-58q26 0 53-20.5t27-59.5q0-50 35-85t85-35q50 0 85 35t35 85q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T320-280q0-17-11.5-28.5T280-320q-17 0-28.5 11.5T240-280q0 23-5.5 42T220-202q5 2 10 2h10Zm230-160L360-470l358-358q11-11 27.5-11.5T774-828l54 54q12 12 12 28t-12 28L470-360Zm-190 80Z"/></svg>
+                        </button> -->
+                        <button class="add-banner" title="Remove Banner" id="resetBannerButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 -960 960 960" width="25"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                        </button>
+                    </div>
+                    <dialog id="pfpModal" class="modal">
+                        <div class="modal-top">
+                            <h1 class="modal-heading">Edit Image</h1>
+                        </div>
+                        <div class="image-preview" id="imagePreview"></div>
+                        <form class="modal-bottom" enctype="multipart/form-data" id="pfpForm">
+                            {% csrf_token %}
+                            <input type="file" id="pfpFilePicker" accept=".jpg, .jpeg, .png, .gif" style="display: none;">
+                            <!-- <input type="file" name="avatar" id="croppedPfpInput" accept=".jpg, .jpeg, .png, .gif" style="display: none;"> -->
+                            <button class="modal-cancel-button" id="closePfpModalButton" type="button">Cancel</button>
+                            <input type="button" value="Save" class="green-button" id="submitPfpButton">
+                        </form>
+                    </dialog>
+                    <dialog id="bannerModal" class="modal">
+                        <div class="modal-top"><h1 class="modal-heading">Edit Banner</h1></div>
+                        <div class="image-preview" id="bannerPreview"></div>
+                        <form class="modal-bottom" enctype="multipart/form-data" id="bannerForm">
+                            <input type="file" id="bannerFilePicker" accept=".jpg, .jpeg, .png, .gif" style="display: none;">
+                            <!-- <input type="file" id="croppedBannerInput" accept=".jpg, .jpeg, .png, .gif" style="display: none;"> -->
+                            <button class="modal-cancel-button" id="closeBannerModalButton" type="button">Cancel</button>
+                            <button type="button" class="green-button" id="submitBannerButton">Save</button>
+                        </form>
+                    </dialog>
+                    <div class="pfp-info-container">
+                        <div class="pfp" id="pfp" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{user.avatar}}); background-size: cover;">
+                            <button class="add-pfp" id="changePfpButton" title="Change Avatar">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" width="35"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                            </button>
+                            <button class="add-pfp" title="Reset Avatar" id="resetPfpButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 -960 960 960" width="25"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                            </button>
+                        </div>
+                        <form class="setting-options" id="updateProfileForm">
+                            {% csrf_token %}
+                            <label for="editedUsername">USERNAME</label><br>
+                            <input type="text" name="editedUsername" id="editedUsername" class="options-textbox" value="{{user.username}}"><br><br>
+                            <label for="editedDisplayName">DISPLAY NAME</label><br>
+                            <input type="text" name="editedDisplayName" id="editedDisplayName" class="options-textbox" value="{{user.name}}"><br><br>
+                            <label for="editedBio">ABOUT ME</label><br>
+                            <textarea name="editedBio" id="editedBio" class="options-textbox" oninput="updateCharCount()" style="height: 85px; padding-top: 10px; border-bottom-left-radius: 0; border-bottom-right-radius: 0; resize: none; overflow: hidden; padding-bottom: 0;">{{ user.bio }}</textarea>
+                            <div class="char-counter" id="charCounter"></div><br>
+                            <input type="button" form="updateProfileForm" value="Save Changes" class="long-green-button" id="submitProfileButton">
+                        </form>
+                    </div>
+                </div>
+                <div class="tab-content" id="account">
+                    <h1 class="setting-heading">My Account</h1>
+                    <div>
+                        <label for="email">EMAIL</label><br>
+                        <input type="email" name="email" disabled id="email" class="options-textbox" value="{{user.email}}" style="cursor: not-allowed;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="blue-button" id="openEmailModalButton">Change Email</button>
+                    </div>
+                    <dialog class="modal" id="emailModal">
+                        <div class="modal-top">
+                            <h1 class="modal-heading">Change your email</h1>
+                        </div>
+                        <form hx-post="/update-email/" hx-target="#emailChangeMessage" hx-swap="innerHTML" id="updateEmailForm">
+                            {% csrf_token %}
+                            <label for="new-email">NEW EMAIL</label><br>
+                            <input type="email" name="new-email" class="options-textbox"><br><br>
+                            <label for="current-password">CURRENT PASSWORD</label><br>
+                            <input type="password" name="current-password" class="options-textbox"><br><br><br>
+                        </form>
+                        <div class="modal-bottom">
+                            <button class="modal-cancel-button" type="button" id="closeEmailModalButton">Cancel</button>
+                            <input type="submit" form="updateEmailForm" value="Change" class="green-button">
+                        </div>
+                        <div id="emailChangeMessage" style='text-align: center; background-color:red; color: white; margin-top: 5px; border-radius: 3px;'></div>
+                    </dialog>
+                    <div class="long-separator"></div>
+                    <h3 class="setting-subheading">Password</h3>
+                    <button class="blue-button" id="changePasswordButton" style="width: 170px;">Change Password</button>
+                    <dialog id="passwordModal" class="modal">
+                        <div class="modal-top">
+                            <h1 class="modal-heading">Change your password</h1>
+                        </div>
+                        <form hx-post="/update-password/" hx-target="#passwordChangeMessage" hx-swap="innerHTML" id="updatePasswordForm">
+                            {% csrf_token %}
+                            <label for="current-password">CURRENT PASSWORD</label><br>
+                            <input type="password" name="current-password" class="options-textbox"><br><br>
+                            <label for="new-password">NEW PASSWORD</label><br>
+                            <input type="password" name="new-password" class="options-textbox"><br><br>
+                            <label for="confirm-password">CONFIRM NEW PASSWORD</label><br>
+                            <input type="password" name="new-password2" class="options-textbox">
+                            <br><br><br>
+                        </form>
+                        <div class="modal-bottom">
+                            <button class="modal-cancel-button" type="button" id="closePasswordModalButton">Cancel</button>
+                            <input type="submit" form="updatePasswordForm" value="Change" class="green-button">
+                        </div>
+                        <div id="passwordChangeMessage" style='text-align: center; background-color:red; color: white; margin-top: 5px; border-radius: 3px;'></div>
+                    </dialog>
+                </div>
+                <!-- <div class="tab-content" id="themes">
+                    <h1 class="setting-heading">Themes</h1>
+                </div>
+                <div class="tab-content" id="fonts">
+                    <h1 class="setting-heading">Fonts</h1>
+                </div> -->
+            </div>
+            <div class="right-settings" id="rightSetting">
+                <button class="close-settings-button" id="closeSettingsButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30"><path d="m248.667-188.667-58.667-60L421-480 190-712.667l58.667-59.999L481-540l230.333-232.666L770-712.667 539.666-480 770-248.667l-58.667 60L481-421.334 248.667-188.667Z"/></svg>
+                </button>
+                <p class="close-settings-button-info">ESC</p>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/settings.js' %}"     type="text/javascript"></script>
+    <script src="{% static 'js/imageHandler.js' %}" type="module"></script>
+    <script src="{% static 'js/htmx.min.js' %}"     type="text/javascript"></script>
+    <script src="{% static 'js/ws.js' %}"           type="text/javascript"></script>
+    <script src="{% static 'js/feed.js' %}"         type="text/javascript"></script>
+    <script src="{% static 'js/profile.js' %}"      type="text/javascript"></script>
+    <script src="{% static 'js/validator.js' %}"    type="text/javascript"></script>
+    <script src="{% static 'js/croppie.js' %}"      type="module"></script>
+    <script> 
+            const CSRF_TOKEN = '{{ csrf_token }}';
+            document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = CSRF_TOKEN;
+            });
+
+            let scrolling = false;
+
+            document.getElementById("mainBox").addEventListener("scroll", () => {
+                scrolling = true;
+            });
+
+            htmx.on("htmx:beforeRequest", (evt) => {
+                if (evt.detail.elt.getAttribute('hx-get') === '/search' &&  document.getElementById('searchBox').value.trim() === '') {
+                    evt.preventDefault();
+                }
+            });
+
+            htmx.on("htmx:wsAfterMessage", () => {
+                if (!scrolling) {
+                    let messageDiv = document.getElementById("mainBox");
+                    messageDiv.scrollTop = messageDiv.scrollHeight;
+                }
+                
+                scrolling = false;
+            });
+
+            htmx.on("htmx:wsAfterSend", () => {
+                let messageDiv = document.getElementById("mainBox");
+                messageDiv.scrollTop = messageDiv.scrollHeight;
+            });
+
+            htmx.on("htmx:wsOpen", () => {
+                let messageDiv = document.getElementById("mainBox");
+                messageDiv.scrollTop = messageDiv.scrollHeight;
+            })
+    </script>
+</body>
+</html>
+

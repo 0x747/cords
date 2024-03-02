@@ -1,0 +1,450 @@
+@import './constants.css';
+
+* {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.setting-container {
+    display: flex;
+    width: 100%;
+}
+
+.left-settings {
+    display: flex;
+    padding-top: 25px;
+    width: 30%;
+    height: 100vh;
+    background-color: var(--light-background-grey);
+    justify-content: right;
+}
+
+.middle-settings {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+    flex-direction: column;
+}
+
+.right-settings {
+    padding-top: 35px;
+    padding-left: 20px;
+    display: flex;
+    width: 15%;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.setting-heading {
+    margin-bottom: 20px;
+}
+
+.setting-subheading {
+    margin-bottom: 25px;
+}
+
+.modal {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.modal-top {
+    display: flex;
+    gap: 2rem;
+    flex-direction: row;
+    align-items: center;
+}
+
+.modal-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 1.5rem;
+}
+
+.modal-heading {
+    font-size: 25px;
+    margin-bottom: 15px;
+    color: var(--light-text);
+}
+
+.close-modal-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    fill: var(--light-text);
+}
+
+.close-modal-button:hover {
+    background-color: var(--light-hover-text);
+}
+
+.close-settings-button {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--light-text);
+    fill: var(--light-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.close-settings-button-info {
+    text-align: center;
+    width: 40px;
+    padding-top: 5px;
+    color: var(--light-text);
+    font-size: 15px;
+}
+
+
+.close-settings-button:hover   {
+    background-color: var(--light-inbox-btn-hover-grey);
+    border-color: var(--light-hover-text);
+    fill: var(--light-hover-text);
+}
+
+.close-settings-button:focus {
+    scale: 0.9;
+}
+
+.close-settings-button:hover ~ .close-settings-button-info   {
+    color: var(--light-hover-text);
+}
+
+.button-list {
+    list-style-type: none;
+    padding-left: 0;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.setting-category {
+    margin: 10px;
+    width: 200px;
+    padding-left: 10px;
+    font-weight: bold;
+    color: var(--light-text);
+}
+
+
+.list-button {
+    display: block;
+    width: 210px;
+    color: var(--light-text);
+    padding-left: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border-radius: 5px;
+    cursor: pointer;
+    padding-right: 10px;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    font-size: 17px;
+}
+
+.list-button:hover {
+    background-color: var(--light-inbox-btn-hover-grey);
+    color: var(--light-text-hover);
+}
+
+.list-button:hover svg {
+    fill: var(--light-text-hover);
+}
+
+.list-button svg {
+    vertical-align: middle;
+    float: right;
+    fill: var(--light-text);
+}
+
+.tab-content {
+    padding-top: 35px;
+    padding-left: 35px;
+    padding-right: 35px;
+    width: 100%;
+    height: 200vh;
+    flex-direction: column;
+    display: none;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+
+.active {
+    display: flex;
+}
+
+/* .tab-content:target {
+    display: flex;
+} */
+
+.separator {
+    width: 200px;
+    border-bottom: 1px solid var(--light-navbar-border-grey);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.long-separator {
+    width: 100%;
+    border-bottom: 1px solid var(--light-navbar-border-grey);
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+
+.list-button.selected {
+    background-color: var(--light-button-selected);
+    color: var(--light-text-hover);
+}
+
+.active {
+    display: flex;
+}
+
+.fade-in-setting {
+    animation-name: fade-in-setting;
+    animation-duration: 0.3s;
+    animation-timing-function: ease-in-out;
+}
+
+/* .fade-out-settings {
+    animation-name: fade-out-setting;
+    animation-duration: 0.3s;
+    animation-timing-function: ease-in-out;
+} */
+
+@keyframes fade-in-settings {
+    from { scale: 1.2; opacity: 0%; }
+    to { scale: 1; opacity: 100%;}
+}
+
+@keyframes fade-out-settings {
+    from { scale: 1; opacity: 100%;}
+    to { scale: 1.2; opacity: 0%; }
+}
+
+label {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--light-text);
+}
+
+.options-textbox {
+    width: 345px;
+    height: 35px;
+    margin-top: 5px;
+    outline: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+    border-radius: 5px;
+    border-color: var(--light-background-grey);
+    background-color: var(--light-background-grey);
+    color: var(--light-text-hover);
+}
+
+.char-counter {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: 345px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 30px;
+    background-color: var(--light-background-grey);
+    color: var(--light-text-hover);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.long-green-button {
+    width: 365px;
+    height: 35px;
+    cursor: pointer;
+    background-color: var(--green-button);
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-size: 15px;
+}
+
+.long-green-button:hover {
+    background-color: var(--green-button-hover);
+}
+
+.blue-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 35px;
+    cursor: pointer;
+    background-color: var(--blue-button);
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-size: 15px;
+}
+
+.blue-button:hover {
+    background-color: var(--blue-button-hover);
+}
+
+.green-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 35px;
+    cursor: pointer;
+    background-color: var(--green-button);
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-size: 15px;
+}
+
+.green-button:hover {
+    background-color: var(--green-button-hover);
+}
+
+.red-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 35px;
+    cursor: pointer;
+    background-color: var(--red-button);
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-size: 15px;
+}
+
+.red-button:hover {
+    background-color: var(--red-button-hover);
+}
+
+.red-outline-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 35px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid var(--red-button);
+    border-radius: 3px;
+    color: var(--red-button);
+    font-size: 15px;
+}
+
+.red-outline-button:hover {
+    background-color: var(--red-button);
+    color: white;
+}
+
+.modal-cancel-button {
+    color: var(--red-button);
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-size: 15px;
+    outline: none;
+}
+
+.modal-cancel-button:hover {
+    text-decoration: underline;
+}
+
+.underline-button {
+    color: var(--light-text);
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.underline-button:hover {
+    text-decoration: underline;
+}
+
+.image-preview {
+    width: 480px;
+    height: 360px;
+    border: none;
+}
+
+
+.banner-crop-preview {
+    width: 470px;
+    height: 120px;
+    border: 5px solid rgb(57, 126, 255)
+}
+
+.image-zoom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+}
+
+.grey-svg {
+    fill: var(--light-hover-text);
+}
+
+.zoom-slider {
+    width: 80%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.banner {
+    width: 700px;
+    height: 175px;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pfp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 140px;
+    width: 140px;
+    background-color: var(--light-text-hover);
+}
+
+.add-banner, .add-pfp {
+    background-color: rgba(0, 0, 0, 0.35);
+    border: none;
+    border-radius: 50%;
+    fill: rgb(200, 200, 200);
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.add-banner:hover, .add-pfp:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    fill: white;
+}
+
+.pfp-info-container {
+    display: flex;
+    width: 700px;
+    flex-direction: row;
+    margin-top: 30px;
+    gap: 2.5rem;
+}

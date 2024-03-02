@@ -1,0 +1,134 @@
+@import './constants.css';
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 1000px;
+}
+
+.profile-banner {
+    position: relative;
+    width: 100%;
+    padding-bottom: 25%; /* 4:1 aspect ratio (1/4 = 0.25) */
+    background-color: black;
+    top: 0;
+    position: sticky;
+}
+
+.profile-pfp {
+    min-height: 135px;
+    max-height: 135px;
+    border-radius: 5px;
+    min-width: 135px;
+    max-width: 135px;
+}
+
+.user-information {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(5px);
+}
+
+.user-details {
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.display-name {
+    font-weight: bold;
+    font-size: 25px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-username {
+    margin-bottom: 10px;
+    color: var(--light-text);
+}
+
+.profile-posts {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border-top: 1px solid var(--light-button-hover);
+    background-color: white;
+    z-index: 9;
+}
+
+.profile-post-preview {
+    height: 300px;
+    width: 300px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+}
+
+.post-preview-overlay {
+    color: transparent;
+    fill: transparent;
+    font-size: 30px;
+    gap: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 300px;
+}
+
+.post-preview-overlay:hover {
+    color: white;
+    fill: white;
+    background-color: rgba(15, 15, 15, 0.35);
+}
+
+.user-statistics {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    color: var(--light-text);
+    font-size: 20px;
+}
+
+.user-statistics b {
+    color: black;
+}
+
+.follow:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.interaction-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.message-user-button {
+    height: 35px;
+    width: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--blue-button);
+    fill: white;
+    cursor: pointer;
+    border-radius: 3px;
+    border: none;
+}
+
+.message-user-button:hover {
+    background-color: var(--blue-button-hover);
+}
