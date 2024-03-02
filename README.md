@@ -33,12 +33,19 @@ NOTE: These steps are for Ubuntu/Debian based systems, however, Windows and MacO
    ```
    pip install -r requirements.txt
    ```
-4. Create an admin user to access the Django admin dashboard `/admin`.
+4. Make migrations to database
+
+   ```
+   python3 manage.py makemigrations
+   python3 manage.py migrate
+   ```
+
+5. Create an admin user to access the Django admin dashboard `/admin`.
 
    ```
    python3 manage.py createsuperuser
    ```
-5. Run the development server. If you get an error saying a module was not found, see [manually installing dependencies](#manually-installing-dependencies)
+7. Run the development server. If you get an error saying a module was not found, see [manually installing dependencies](#manually-installing-dependencies)
 
    ```
    python3 manage.py runserver
