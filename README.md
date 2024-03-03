@@ -25,6 +25,7 @@
 - Follow/Unfollow
 - Send/Delete a message
 - Search users
+- Notifications
 - Admin dashboard (built-in)
 
 ## Installation
