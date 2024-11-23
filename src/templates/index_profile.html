@@ -61,7 +61,7 @@
     {% endfor %}
 </div>
 <div class="user-corner" id="userCorner">
-    <div class="user-profile-button" id="userProfileButton" hx-get="/{{user.username}}" hx-replace-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox">
+    <div class="user-profile-button" id="userProfileButton" hx-get="/u/{{user.username}}" hx-replace-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox">
         <div class="avatar" id="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{user.avatar}}); background-size: cover;"></div>
         <div class="username" id="username">{{user.username}}</div>
     </div>
@@ -106,7 +106,7 @@
                         </div>
                         <div style="display: flex; flex-direction: column;">
                             {% for entry in followers %}
-                                <div hx-get="/{{entry.follower.username}}" onclick="closeFollowModal('followerModal')" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
+                                <div hx-get="/u/{{entry.follower.username}}" onclick="closeFollowModal('followerModal')" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
                                     <div class="post-user-avatar" style="background-image: url({{entry.follower.avatar.url}}); background-size: cover;"></div>
                                     <div class="post-username" style="font-size: 17px;">{{ entry.follower.username }}</div>
                                 </div>
@@ -125,7 +125,7 @@
                         </div>
                         <div style="display: flex; flex-direction: column;">
                             {% for entry in following %}
-                                <div hx-get="/{{entry.followee.username}}" onclick="closeFollowModal('followingModal')" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
+                                <div hx-get="/u/{{entry.followee.username}}" onclick="closeFollowModal('followingModal')" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
                                     <div class="post-user-avatar" style="background-image: url({{entry.followee.avatar.url}}); background-size: cover;"></div>
                                     <div class="post-username" style="font-size: 17px;">{{ entry.followee.username }}</div>
                                 </div>

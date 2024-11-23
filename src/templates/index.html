@@ -65,7 +65,7 @@
     {% endif %}
 </div>
 <div class="user-corner" id="userCorner">
-    <div class="user-profile-button" id="userProfileButton" hx-get="/{{user.username}}" hx-replace-url="true" hx-push-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" hx-vals='{"swap: "true"}'>
+    <div class="user-profile-button" id="userProfileButton" hx-get="/u/{{user.username}}" hx-replace-url="true" hx-push-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" hx-vals='{"swap: "true"}'>
         <div class="avatar" id="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{user.avatar}}); background-size: cover;"></div>
         <div class="username" id="username">{{user.username}}</div>
     </div>

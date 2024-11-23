@@ -1,7 +1,7 @@
 {% for post in posts %}
         <div class="post-card" id="{{post.id}}">
             <div class="post-heading">
-                <div hx-get="/{{post.user.username}}" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button" style="display: flex; align-items: center; gap: 0.7rem;">
+                <div hx-get="/u/{{post.user.username}}" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button" style="display: flex; align-items: center; gap: 0.7rem;">
                     <div class="post-user-avatar" style="background-image: url({{post.user.avatar.url}}); background-size: cover;"></div>
                     <div class="post-username">{{ post.user.username }}</div>
                 </div>

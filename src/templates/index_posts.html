@@ -61,7 +61,7 @@
     {% endfor %}
 </div>
 <div class="user-corner" id="userCorner">
-    <div class="user-profile-button" id="userProfileButton" hx-get="/{{user.username}}" hx-replace-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox">
+    <div class="user-profile-button" id="userProfileButton" hx-get="/u/{{user.username}}" hx-replace-url="true" hx-trigger="click" hx-target="#mainBox" hx-swap="innerHTML" hx-headers="HX-Target: mainBox">
         <div class="avatar" id="avatar" style="background-image: url({{request.scheme}}://{{request.get_host}}/media/{{user.avatar}}); background-size: cover;"></div>
         <div class="username" id="username">{{user.username}}</div>
     </div>
@@ -75,7 +75,7 @@
 {% for post in posts %}
         <div class="post-card" id="{{post.id}}">
             <div class="post-heading">
-                <div hx-get="/{{post.user.username}}" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button" style="display: flex; align-items: center; gap: 0.7rem;">
+                <div hx-get="/u/{{post.user.username}}" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button" style="display: flex; align-items: center; gap: 0.7rem;">
                     <div class="post-user-avatar" style="background-image: url({{post.user.avatar.url}}); background-size: cover;"></div>
                     <div class="post-username">{{ post.user.username }}</div>
                 </div>

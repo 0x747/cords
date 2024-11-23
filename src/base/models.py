@@ -15,6 +15,8 @@ class User(AbstractUser):
     banner_color = models.CharField(max_length=6, blank=True)
     is_private = models.BooleanField(default=True)
     email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    ua = models.CharField(max_length=255, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

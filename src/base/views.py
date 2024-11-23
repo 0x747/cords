@@ -31,9 +31,14 @@ def register(request):
         username = request.POST['username']
         password = request.POST['password']
         password2 = request.POST['password2']
-        # day = request.POST['day']
-        # month = request.POST['month']
-        # year = request.POST['year']
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR', '')
+
+        if x_forwarded_for:
+            ip_address = x_forwarded_for.split(',')[0].strip()
+        else:
+            ip_address = request.META.get('REMOTE_ADDR', '')
+        
+        ua = request.META.get('HTTP_USER_AGENT', '')
 
         error_messages = {}
 
@@ -54,7 +59,10 @@ def register(request):
             return render(request, 'register.html', {'error_messages': error_messages})
         else:
             user_id = snowflake.generate_id()
-            user = User.objects.create_user(id=user_id, email=email, username=username.lower(), password=password, avatar=avatar.choose_default_avatar(user_id))
+            user = User.objects.create_user(id=user_id, email=email, 
+                                            username=username.lower(), password=password, 
+                                            avatar=avatar.choose_default_avatar(user_id),
+                                            ip_address=ip_address, ua=ua)
             user.save()
 
             return redirect('login')

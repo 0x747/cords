@@ -10,7 +10,7 @@
     <h1 class="modal-heading">Likes</h1>
     <div style="display: flex; flex-direction: column;">
         {% for like in user_likes %}
-            <div hx-get="/{{like.user.username}}" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
+            <div hx-get="/u/{{like.user.username}}" hx-trigger="click" hx-push-url="true" hx-target="#mainBox" hx-swap="innerHTML" hx-replace-url="true" hx-headers="HX-Target: mainBox" class="post-profile-button like-profile-button" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none; padding: 5px; border-radius: 5px;">
                 <div class="post-user-avatar" style="background-image: url({{like.user.avatar.url}}); background-size: cover;"></div>
                 <div class="post-username">{{ like.user.username }}</div>
             </div>

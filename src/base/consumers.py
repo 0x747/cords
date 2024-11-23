@@ -2,7 +2,6 @@ import json
 from django.template import loader
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
-from .models import Chat, Message, Notification
 from .utils.snowflake import Snowflake
 
 snowflake = Snowflake()
@@ -10,6 +9,7 @@ snowflake = Snowflake()
 class ChatConsumer(WebsocketConsumer):
 
     def connect(self):
+        from .models import Chat
 
         self.user = self.scope['user']
         self.root_url = str(self.scope["headers"][6][1])[2:-1]
@@ -30,6 +30,7 @@ class ChatConsumer(WebsocketConsumer):
         }))
     
     def receive(self, text_data):
+        from .models import Message, Notification
         text_data_json = json.loads(text_data)
         chat_message = text_data_json['message']
 
